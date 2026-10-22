@@ -21,10 +21,6 @@
 void BSP_CurrentSensor_Init(void);            // 初始化
 void BSP_CurrentSensor_CalibrateOffset(void); // 校准零漂
 float BSP_CurrentSensor_GetOffsetById(uint8_t id);
-
-float BSP_CurrentSensor_GetADCValue(void); // 获取ADC平均值
-float BSP_CurrentSensor_GetOffset(void);   // 获取零漂值
-
 float BSP_CurrentSensor_GetCurrent(uint8_t id); // 获取当前电流值(mA)
 void BSP_CurrentSensor_Update(void);      // 更新电流值
 

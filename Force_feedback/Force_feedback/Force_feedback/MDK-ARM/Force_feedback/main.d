@@ -36,10 +36,14 @@ force_feedback\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.
 force_feedback\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 force_feedback\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 force_feedback\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+force_feedback\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
+force_feedback\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
+force_feedback\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
 force_feedback\main.o: ../Core/Inc/adc.h
 force_feedback\main.o: ../Core/Inc/dma.h
 force_feedback\main.o: ../Core/Inc/tim.h
 force_feedback\main.o: ../Core/Inc/usart.h
+force_feedback\main.o: ../Core/Inc/usb_otg.h
 force_feedback\main.o: ../Core/Inc/gpio.h
 force_feedback\main.o: ../Core/Inc/fsmc.h
 force_feedback\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h

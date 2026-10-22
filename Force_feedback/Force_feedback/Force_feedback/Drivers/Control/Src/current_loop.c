@@ -42,9 +42,6 @@ static void SD_Recover(BrushMotorConfig *motor)
     HAL_GPIO_WritePin(motor->ctrl_port, motor->ctrl_pin, GPIO_PIN_SET);
 }
 
-/*==============================================================================
- * 公开接口实现
- *============================================================================*/
 
 /**
  * @brief 初始化电流环控制器

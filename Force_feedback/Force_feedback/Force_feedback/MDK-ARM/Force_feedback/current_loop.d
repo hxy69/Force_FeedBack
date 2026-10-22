@@ -39,6 +39,9 @@ force_feedback\current_loop.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal
 force_feedback\current_loop.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 force_feedback\current_loop.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 force_feedback\current_loop.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+force_feedback\current_loop.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
+force_feedback\current_loop.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
+force_feedback\current_loop.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
 force_feedback\current_loop.o: ../Drivers/BSP/Inc/current_sensor.h
 force_feedback\current_loop.o: ../Drivers/Control/Inc/user_config.h
 force_feedback\current_loop.o: ../Drivers/Control/Inc/vofa_plus.h

@@ -22,6 +22,7 @@
 #include "dma.h"
 #include "tim.h"
 #include "usart.h"
+#include "usb_otg.h"
 #include "gpio.h"
 #include "fsmc.h"
 
@@ -70,7 +71,7 @@
 
 /* USER CODE BEGIN PV */
 BrushMotorConfig motor[3] =
-{
+    {
         {&htim1, TIM_CHANNEL_1, 2625, X_CTRL_GPIO_Port, X_CTRL_Pin, 1},
         {&htim1, TIM_CHANNEL_2, 2625, Y_CTRL_GPIO_Port, Y_CTRL_Pin, 1},
         {&htim1, TIM_CHANNEL_3, 2625, Z_CTRL_GPIO_Port, Z_CTRL_Pin, 1},
@@ -96,41 +97,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-/*==============================================================================
- * 按键处理函数
- *============================================================================*/
-
-/**
- * @brief KEY0：闭环演示（极性轮转启停）
- * @note  按一下启动，再按停止。
- */
-static void Key0_ClosedLoop(void)
-{
-    if (CurrentLoop_GetState(&current_loop[0]) == CURRENT_LOOP_RUNNING)
-    {
-        CurrentLoop_SetTarget(&current_loop[0], 0.0f);
-        CurrentLoop_SetTarget(&current_loop[1], 0.0f);
-        CurrentLoop_SetTarget(&current_loop[2], 0.0f);
-
-        CurrentLoop_Stop(&current_loop[0]);
-        CurrentLoop_Stop(&current_loop[1]);
-        CurrentLoop_Stop(&current_loop[2]);
-
-        closed_loop_active[0] = 0;
-        closed_loop_active[1] = 0;
-        closed_loop_active[2] = 0;
-    }
-    else
-    {
-        CurrentLoop_Start(&current_loop[0]);
-        CurrentLoop_Start(&current_loop[1]);
-        CurrentLoop_Start(&current_loop[2]);
-
-        closed_loop_active[0] = 1;
-        closed_loop_active[1] = 1;
-        closed_loop_active[2] = 1;
-    }
-}
 
 /* USER CODE END 0 */
 
@@ -172,6 +138,7 @@ int main(void)
     MX_USART1_UART_Init();
     MX_ADC2_Init();
     MX_ADC3_Init();
+    MX_USB_OTG_FS_PCD_Init();
     /* USER CODE BEGIN 2 */
     DWT_Init();       // 初始化DWT
     lcd_init();       // 初始化LCD
@@ -182,35 +149,41 @@ int main(void)
     // HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adc_raw_data, ADC_TOTAL_SAMPLES); // 启动ADC1的DMA采集
     HAL_Delay(10);
 
-    BrushMotor_Init(&motor[0]); // 电机初始化
-    BrushMotor_Init(&motor[1]); // 电机初始化
-    BrushMotor_Init(&motor[2]); // 电机初始化
+    /* 电机初始化 */
+    BrushMotor_Init(&motor[0]);
+    BrushMotor_Init(&motor[1]);
+    BrushMotor_Init(&motor[2]);
 
     /* 自举电容预充电：50%互补PWM短暂运行，双半桥等位不转，Cboot充满 */
     BrushMotor_BootstrapCharge(&motor[0]);
     BrushMotor_BootstrapCharge(&motor[1]);
     BrushMotor_BootstrapCharge(&motor[2]);
 
+    /* 初始方向为正向 */
     BrushMotor_SetDirection(&motor[0], MOTOR_FORWARD);
     BrushMotor_SetDirection(&motor[1], MOTOR_FORWARD);
     BrushMotor_SetDirection(&motor[2], MOTOR_FORWARD);
 
+    /* 初始化速度为0 */
     BrushMotor_SetSpeed(&motor[0], 0);
     BrushMotor_SetSpeed(&motor[1], 0);
     BrushMotor_SetSpeed(&motor[2], 0);
 
+    /* 初始化电机使能 */
     BrushMotor_Enable(&motor[0]);
     BrushMotor_Enable(&motor[1]);
     BrushMotor_Enable(&motor[2]);
 
     HAL_Delay(500);
 
-    BSP_CurrentSensor_Init(); /* 内部先阻塞校准，再开启注入中断 */
+    /* 电流零点校准 */
+    BSP_CurrentSensor_Init(); 
     // BSP_VoltageSensor_Init(); /* 电压采集初始化 */
 
-    BrushMotor_Disable(&motor[0]); /* 电机关闭 */
-    BrushMotor_Disable(&motor[1]); /* 电机关闭 */
-    BrushMotor_Disable(&motor[2]); /* 电机关闭 */
+    /* 电机关闭 */
+    BrushMotor_Disable(&motor[0]); 
+    BrushMotor_Disable(&motor[1]); 
+    BrushMotor_Disable(&motor[2]); 
 
     /* ---- 初始化电流环控制器（绑定电机驱动，加载默认 PID 参数） ---- */
     CurrentLoop_Init(&current_loop[0], &motor[0]);
@@ -230,9 +203,6 @@ int main(void)
     char buffer[50]; // 用于显示占空比的缓冲区
     while (1)
     {
-        uint8_t key_state = KEY_Scan(); // 扫描按键
-        if (key_state == 1)
-            Key0_ClosedLoop();
 
         /* ---- 串口指令解析 ---- */
         PID_ParseState_t parse_state = PID_ParamParser_Parse(&current_pid_parse);
@@ -258,8 +228,6 @@ int main(void)
                 CurrentLoop_SetTarget(&current_loop[2], cmd.target_z);
                 for (int i = 0; i < 3; i++)
                 {
-                    //					if(i == 0) continue;
-                    //					if(i == 2) continue;
                     if (CurrentLoop_GetState(&current_loop[i]) != CURRENT_LOOP_RUNNING)
                     {
                         CurrentLoop_Start(&current_loop[i]);
@@ -293,6 +261,7 @@ int main(void)
         float current_y_ma = BSP_CurrentSensor_GetCurrent(1);
         float current_z_ma = BSP_CurrentSensor_GetCurrent(2);
 
+        
         /* ============ LCD显示：3路电流环数据 ============ */
         /* ---- 电机X (索引0) ---- */
         sprintf(buffer, "PWM_X:%.0f%%  ", PID_GetOutput(&current_loop[0].pid));
@@ -375,15 +344,14 @@ void SystemClock_Config(void)
     /** Initializes the RCC Oscillators according to the specified parameters
      * in the RCC_OscInitTypeDef structure.
      */
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+    RCC_OscInitStruct.HSEState = RCC_HSE_ON;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
     RCC_OscInitStruct.PLL.PLLM = 8;
-    RCC_OscInitStruct.PLL.PLLN = 168;
+    RCC_OscInitStruct.PLL.PLLN = 336;
     RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-    RCC_OscInitStruct.PLL.PLLQ = 4;
+    RCC_OscInitStruct.PLL.PLLQ = 7;
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
     {
         Error_Handler();

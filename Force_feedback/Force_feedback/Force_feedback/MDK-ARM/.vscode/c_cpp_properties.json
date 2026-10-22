@@ -3,20 +3,20 @@
         {
             "name": "Force_feedback",
             "includePath": [
-                "d:\\工作记录\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Core\\Inc",
-                "d:\\工作记录\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\STM32F4xx_HAL_Driver\\Inc",
-                "d:\\工作记录\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\Legacy",
-                "d:\\工作记录\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include",
-                "d:\\工作记录\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\CMSIS\\Include",
-                "d:\\工作记录\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\BSP\\Inc",
-                "d:\\工作记录\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\Control\\Inc",
+                "d:\\GitHub\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Core\\Inc",
+                "d:\\GitHub\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\STM32F4xx_HAL_Driver\\Inc",
+                "d:\\GitHub\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\Legacy",
+                "d:\\GitHub\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include",
+                "d:\\GitHub\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\CMSIS\\Include",
+                "d:\\GitHub\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\BSP\\Inc",
+                "d:\\GitHub\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\Control\\Inc",
                 "d:\\Keil_v5\\ARM\\ARMCC\\include",
                 "d:\\Keil_v5\\ARM\\ARMCC\\include\\rw",
-                "d:\\工作记录\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\MDK-ARM",
-                "d:\\工作记录\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Core\\Src",
-                "d:\\工作记录\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\STM32F4xx_HAL_Driver\\Src",
-                "d:\\工作记录\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\BSP\\Src",
-                "d:\\工作记录\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\Control\\Src"
+                "d:\\GitHub\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\MDK-ARM",
+                "d:\\GitHub\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Core\\Src",
+                "d:\\GitHub\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\STM32F4xx_HAL_Driver\\Src",
+                "d:\\GitHub\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\BSP\\Src",
+                "d:\\GitHub\\Force_FeedBack\\Force_feedback\\Force_feedback\\Force_feedback\\Drivers\\Control\\Src"
             ],
             "defines": [
                 "USE_HAL_DRIVER",
