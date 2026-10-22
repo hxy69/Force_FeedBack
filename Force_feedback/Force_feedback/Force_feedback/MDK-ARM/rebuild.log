@@ -1,0 +1,19 @@
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'Force_feedback'
+compiling main.c...
+../Core/Src/main.c(302): warning:  #181-D: argument is incompatible with corresponding format string conversion
+          sprintf(buffer, "PWM Duty: %d   ", PID_GetOutput(&current_loop.pid)); // 将占空比转换为字符串
+../Core/Src/main.c(76): warning:  #177-D: variable "current_calibrated"  was declared but never referenced
+  static uint8_t current_calibrated = 0; // 校准标记�?0：未校准�?1：已校准�?
+../Core/Src/main.c(77): warning:  #177-D: variable "calibrate_request"  was declared but never referenced
+  static uint8_t calibrate_request = 0;  // 校准请求�?0：无请求�?1：需要请求）
+../Core/Src/main.c(97): warning:  #177-D: function "Sys_LCD_Update"  was declared but never referenced
+  static void Sys_LCD_Update(uint32_t tick_ms);
+../Core/Src/main.c(98): warning:  #177-D: function "Sys_Serial_Output"  was declared but never referenced
+  static void Sys_Serial_Output(uint32_t tick_ms);
+../Core/Src/main.c: 5 warnings, 0 errors
+linking...
+Program Size: Code=32660 RO-data=12848 RW-data=120 ZI-data=4176  
+FromELF: creating hex file...
+"Force_feedback\Force_feedback.axf" - 0 Error(s), 5 Warning(s).
+Build Time Elapsed:  00:00:03

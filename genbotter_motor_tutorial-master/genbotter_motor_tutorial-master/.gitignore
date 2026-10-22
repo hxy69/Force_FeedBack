@@ -1,0 +1,115 @@
+# 忽略 CubeMX 自动生成的中间文件
+*.launch
+*.uvguix.*
+*.bak
+
+# 忽略 Keil MDK 编译生成文件
+*.uvguix
+*.uvoptx
+*.hex
+*.axf
+*.map
+*.o
+*.d
+*.crf
+*.htm
+*.lnp
+*.sct
+*.dep
+*.plg
+*.lst
+
+# 忽略 Keil 输出目录
+Objects/
+Listings/
+*.build_log.htm
+
+# 忽略 VSCode 配置（可选保留 .vscode/settings.json）
+.vscode/
+!.vscode/settings.json
+
+# === Python 特定忽略 ===
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.log
+*.tmp
+
+# 特定于 matplotlib 的缓存
+.matplotlib/
+
+# 特定于您的项目
+# 如果不需要保存仿真数据，可以添加：
+# *.csv
+# *.npy
+# *.npz

@@ -1,0 +1,3 @@
+numpy>=1.21.0
+matplotlib>=3.5.0
+# tkinter 通常Python自带，不需要额外安装
