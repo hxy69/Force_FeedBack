@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.11.1, 2026-09-23T18:32:26. -->
+<!-- Written by QtCreator 4.11.1, 2026-10-23T18:25:38. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -287,9 +287,8 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Force_feedback_app2</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/Administrator/Desktop/Force_FeedBack/Force_feedback_app/Force_feedback_app.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/Administrator/Desktop/Force_FeedBack/Force_feedback_app/Force_feedback_app.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/GitHub/Force_FeedBack/Force_feedback_app/Force_feedback_app.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/GitHub/Force_FeedBack/Force_feedback_app/Force_feedback_app.pro</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>

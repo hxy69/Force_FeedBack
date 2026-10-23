@@ -1030,6 +1030,16 @@
               <FileType>1</FileType>
               <FilePath>..\Drivers\BSP\Src\temper_sensor.c</FilePath>
             </File>
+            <File>
+              <FileName>as5600.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\as5600.c</FilePath>
+            </File>
+            <File>
+              <FileName>as5600.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\Inc\as5600.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

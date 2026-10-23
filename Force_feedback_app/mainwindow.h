@@ -26,5 +26,8 @@ private:
     Ui::MainWindow *ui;
     QByteArray m_serialBuffer;
     void handleCommand(const QString &command);
+
+    // Attitude（欧拉角）暂存，供后续驱动3D姿态
+    double m_attX = 0.0, m_attY = 0.0, m_attZ = 0.0;
 };
 #endif // MAINWINDOW_H

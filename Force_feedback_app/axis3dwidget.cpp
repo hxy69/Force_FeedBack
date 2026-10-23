@@ -25,7 +25,7 @@ QPointF Axis3DWidget::project(double x, double y, double z) const
     // 轴约定：X 为横轴（右），Z 为纵轴（上），Y 为纵深（里外）
     const double xi = x;
     const double yi = z;
-    const double zi = y;
+    const double zi = m_flipY ? -y : y;   // 内在翻转：Y 正值落在实线侧，轴图形不变
 
     // 1) 绕 Y 轴旋转（左右转视角）
     double x1 =  xi * cy + zi * sy;
@@ -46,7 +46,7 @@ double Axis3DWidget::viewDepth(double x, double y, double z) const
 {
     const double cy = qCos(m_yaw),   sy = qSin(m_yaw);
     const double cp = qCos(m_pitch), sp = qSin(m_pitch);
-    const double xi = x, yi = z, zi = y;
+    const double xi = x, yi = z, zi = m_flipY ? -y : y;
     const double z1 = -xi * sy + zi * cy;
     const double y1 = yi;
     return y1 * sp + z1 * cp;
@@ -81,7 +81,7 @@ void Axis3DWidget::paintEvent(QPaintEvent *)
     struct Axis { QColor color; QPointF pos; QPointF neg; QString name; bool solidAtPos; };
     const Axis axes[3] = {
         { QColor(255, 80, 80),   project(1.2, 0, 0), project(-1.1, 0, 0),  "X", true },
-        { QColor(80, 255, 80),   project(0, 1.2, 0), project(0, -1.1, 0),  "Y", false },
+        { QColor(80, 255, 80),   project(0, 1.2, 0), project(0, -1.1, 0),  "Y", true },
         { QColor(80, 140, 255),  project(0, 0, 1.2), project(0, 0, -1.1),  "Z", true },
     };
     QFont axisFont = p.font();

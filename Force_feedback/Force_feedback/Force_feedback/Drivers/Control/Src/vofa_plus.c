@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2026-07-21 15:38:03
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2026-08-27 10:57:40
+ * @LastEditTime: 2026-10-23 17:35:10
  * @FilePath: \MDK-ARMd:\genbotter_motor_tutorial-master\genbotter_motor_tutorial-master\3.案例代码\chap10_brush_motor_8\Drivers\Control\Src\vofa_plus.c
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -13,10 +13,16 @@
 
 extern CurrentLoopCtrl current_loop[3];
 
+extern float ang_x, ang_y, ang_z;
+extern float Position_X, Position_Y, Position_Z;
+extern float roll, pitch, yaw;
+
 #if VOFA_PLUS_ENABLE
 
 // 静态发送缓冲区，避免每次调用都分配内存
 static uint8_t vofa_send_buf[VOFA_SEND_BUF_MAX_LEN] = {0};
+
+volatile uint8_t vofa_tx_busy = 0;
 
 /******************** VOFA+核心函数实现 ********************/
 /**
@@ -56,10 +62,14 @@ uint16_t VOFA_Plus_PackData(VOFA_Data_t *vofa_data, uint8_t *send_buf, uint16_t 
     }
 
     // FireWater协议示例：以逗号分隔的字符串格式，回车换行结尾 "RPM:100.0,ACT:95.5,PID:20.0,OUT:25.0\r\n"
-    uint16_t len = snprintf((char *)send_buf, buf_len, "%.1f,%.1f,%.1f,%.1f,%.1f,%.1f\r\n",
+    uint16_t len = snprintf((char *)send_buf, buf_len,
+                            "%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,Encoder:%.1f,%.1f,%.1f,Position:%.1f,%.1f,%.1f,Attitude%.1f,%.1f,%.1f\r\n",
                             vofa_data->tgt_x, vofa_data->cur_x,
                             vofa_data->tgt_y, vofa_data->cur_y,
-                            vofa_data->tgt_z, vofa_data->cur_z);
+                            vofa_data->tgt_z, vofa_data->cur_z,
+                            vofa_data->ang_x, vofa_data->ang_y, vofa_data->ang_z,
+                            vofa_data->pos_x, vofa_data->pos_y, vofa_data->pos_z,
+                            vofa_data->roll, vofa_data->pitch, vofa_data->yaw);
     return len; // 返回封装后的数据长度
 
 #elif VOFA_PROTOCOL == 2 // FireWater协议示例（RawData格式）, 暂未测试的代码
@@ -98,8 +108,11 @@ void VOFA_Plus_SendData(VOFA_Data_t *data)
         return; // 数据封装失败，无法发送
     }
 
-    // 发送封装后的数据
-    HAL_UART_Transmit(&VOFA_UART_HANDLE, vofa_send_buf, data_len, 10); // 发送数据到串口，超时时间10ms
+    vofa_tx_busy = 1;
+    if (HAL_UART_Transmit_DMA(&VOFA_UART_HANDLE, vofa_send_buf, data_len) != HAL_OK)
+    {
+        vofa_tx_busy = 0;   /* 启动失败，释放标志 */
+    }
 }
 
 // 简化接口：从speed_loop.c获取当前数据并发送到VOFA+
@@ -112,6 +125,10 @@ void VOFA_Plus_SendCurrentLoopData(void)
     vofa_data.cur_y = BSP_CurrentSensor_GetCurrent(1);
     vofa_data.tgt_z = CurrentLoop_GetTarget(&current_loop[2]);
     vofa_data.cur_z = BSP_CurrentSensor_GetCurrent(2);
+
+    vofa_data.ang_x = ang_x; vofa_data.ang_y = ang_y; vofa_data.ang_z = ang_z;
+    vofa_data.pos_x = Position_X; vofa_data.pos_y = Position_Y; vofa_data.pos_z = Position_Z;
+    vofa_data.roll = roll; vofa_data.pitch = pitch; vofa_data.yaw = yaw;
     VOFA_Plus_SendData(&vofa_data);
 }
 #endif

@@ -45,6 +45,7 @@
 "force_feedback\current_sensor.o"
 "force_feedback\voltage_sensor.o"
 "force_feedback\temper_sensor.o"
+"force_feedback\as5600.o"
 "force_feedback\current_loop.o"
 "force_feedback\pid.o"
 "force_feedback\vofa_plus.o"

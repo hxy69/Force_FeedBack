@@ -61,3 +61,5 @@ force_feedback\main.o: ../Drivers/Control/Inc/user_config.h
 force_feedback\main.o: ../Drivers/Control/Inc/vofa_plus.h
 force_feedback\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 force_feedback\main.o: ../Drivers/Control/Inc/pid_param_parse.h
+force_feedback\main.o: ../Core/Inc/as5600.h
+force_feedback\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

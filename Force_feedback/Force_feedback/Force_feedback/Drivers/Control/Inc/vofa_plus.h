@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2026-08-04 10:21:37
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2026-08-04 10:50:08
+ * @LastEditTime: 2026-10-23 17:13:54
  * @FilePath: \MDK-ARMc:\Users\Administrator\Desktop\123\Force_feedback\Drivers\Control\Inc\vofa_plus.h
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -27,7 +27,7 @@
 // 2. VOFA协议选择：1=FireWater（字符串，易调试），2=RawData
 #define VOFA_PROTOCOL 1 // 默认选FireWater，改2即可切换为RawData（暂未实现）
 // 3. 定义发送缓冲区长度（根据数据量调整，至少32字节）
-#define VOFA_SEND_BUF_MAX_LEN 128
+#define VOFA_SEND_BUF_MAX_LEN 200
 
 // 复用SpeedLoop中的SpeedLoop_DebugData_t结构体作为VOFA+数据载体，避免重复定义
 typedef struct
@@ -38,6 +38,16 @@ typedef struct
     float cur_y;
     float tgt_z;
     float cur_z;
+
+    float ang_x;
+    float ang_y;
+    float ang_z;
+    float pos_x;
+    float pos_y;
+    float pos_z;
+    float roll;
+    float pitch;
+    float yaw;
 } VOFA_Data_t;
 
 /* ==================== 函数声明 ==================== */

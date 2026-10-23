@@ -33,6 +33,7 @@ private:
     double viewDepth(double x, double y, double z) const;
 
     double m_posX = 0.0, m_posY = 0.0, m_posZ = 0.0; // 当前位置
+    bool m_flipY = true;   // Y 方向翻转：正 Y（正半轴实线）投影到屏幕远端；图形与数据一致
     double m_range = 25.0;  // 坐标范围 ±range，数值单位不同就改这里
     double m_yaw = 0.7;      // 观察角：绕Y轴（弧度）
     double m_pitch = 0.45;   // 观察角：绕X轴

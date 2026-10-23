@@ -43,6 +43,8 @@
 #include "vofa_plus.h"
 #include "pid_param_parse.h"
 #include "string.h"
+#include "as5600.h"
+#include "math.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,6 +62,8 @@
 #define DWT_TICK_US (DWT->CYCCNT / (SystemCoreClock / 1000000u))
 #define DWT_TICK_MS (DWT_TICK_US / 1000u)
 
+#define PI 3.14159265358979f
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -70,6 +74,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+AS5600_Device_t enc_x, enc_y, enc_z;
 BrushMotorConfig motor[3] =
     {
         {&htim1, TIM_CHANNEL_1, 2625, X_CTRL_GPIO_Port, X_CTRL_Pin, 1},
@@ -97,49 +102,51 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+float ang_x = 0, ang_y = 0, ang_z = 0;
+float Position_X = 0, Position_Y = 0, Position_Z = 0;
+float roll = 0, pitch = 0, yaw = 0;
 /* USER CODE END 0 */
 
 /**
- * @brief  The application entry point.
- * @retval int
- */
+  * @brief  The application entry point.
+  * @retval int
+  */
 int main(void)
 {
 
-    /* USER CODE BEGIN 1 */
+  /* USER CODE BEGIN 1 */
 
-    /* USER CODE END 1 */
+  /* USER CODE END 1 */
 
-    /* MCU Configuration--------------------------------------------------------*/
+  /* MCU Configuration--------------------------------------------------------*/
 
-    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-    HAL_Init();
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
 
-    /* USER CODE BEGIN Init */
+  /* USER CODE BEGIN Init */
 
-    /* USER CODE END Init */
+  /* USER CODE END Init */
 
-    /* Configure the system clock */
-    SystemClock_Config();
+  /* Configure the system clock */
+  SystemClock_Config();
 
-    /* USER CODE BEGIN SysInit */
+  /* USER CODE BEGIN SysInit */
 
-    /* USER CODE END SysInit */
+  /* USER CODE END SysInit */
 
-    /* Initialize all configured peripherals */
-    MX_GPIO_Init();
-    MX_DMA_Init();
-    MX_ADC1_Init();
-    MX_FSMC_Init();
-    MX_TIM1_Init();
-    MX_TIM8_Init();
-    MX_TIM6_Init();
-    MX_USART1_UART_Init();
-    MX_ADC2_Init();
-    MX_ADC3_Init();
-    MX_USB_OTG_FS_PCD_Init();
-    /* USER CODE BEGIN 2 */
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_ADC1_Init();
+  MX_FSMC_Init();
+  MX_TIM1_Init();
+  MX_TIM8_Init();
+  MX_TIM6_Init();
+  MX_USART1_UART_Init();
+  MX_ADC2_Init();
+  MX_ADC3_Init();
+  MX_USB_OTG_FS_PCD_Init();
+  /* USER CODE BEGIN 2 */
     DWT_Init();       // 初始化DWT
     lcd_init();       // 初始化LCD
     VOFA_Plus_Init(); // 初始化VOFA+模块
@@ -148,6 +155,10 @@ int main(void)
     HAL_TIM_Base_Start_IT(&htim6); // 打开电压，温度，VOFA+的定时中断
     // HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adc_raw_data, ADC_TOTAL_SAMPLES); // 启动ADC1的DMA采集
     HAL_Delay(10);
+
+    AS5600_Init(&enc_x, SDA_X_GPIO_Port, SDA_X_Pin, SCL_X_GPIO_Port, SCL_X_Pin);
+    AS5600_Init(&enc_y, SDA_Y_GPIO_Port, SDA_Y_Pin, SCL_Y_GPIO_Port, SCL_Y_Pin);
+    AS5600_Init(&enc_z, SDA_Z_GPIO_Port, SDA_Z_Pin, SCL_Z_GPIO_Port, SCL_Z_Pin);
 
     /* 电机初始化 */
     BrushMotor_Init(&motor[0]);
@@ -177,13 +188,13 @@ int main(void)
     HAL_Delay(500);
 
     /* 电流零点校准 */
-    BSP_CurrentSensor_Init(); 
+    BSP_CurrentSensor_Init();
     // BSP_VoltageSensor_Init(); /* 电压采集初始化 */
 
     /* 电机关闭 */
-    BrushMotor_Disable(&motor[0]); 
-    BrushMotor_Disable(&motor[1]); 
-    BrushMotor_Disable(&motor[2]); 
+    BrushMotor_Disable(&motor[0]);
+    BrushMotor_Disable(&motor[1]);
+    BrushMotor_Disable(&motor[2]);
 
     /* ---- 初始化电流环控制器（绑定电机驱动，加载默认 PID 参数） ---- */
     CurrentLoop_Init(&current_loop[0], &motor[0]);
@@ -196,10 +207,10 @@ int main(void)
     CurrentLoop_SetPID(&current_loop[0], PID_KP_X, PID_KI_X, PID_KD_X);
     CurrentLoop_SetPID(&current_loop[1], PID_KP_Y, PID_KI_Y, PID_KD_Y);
     CurrentLoop_SetPID(&current_loop[2], PID_KP_Z, PID_KI_Z, PID_KD_Z);
-    /* USER CODE END 2 */
+  /* USER CODE END 2 */
 
-    /* Infinite loop */
-    /* USER CODE BEGIN WHILE */
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
     char buffer[50]; // 用于显示占空比的缓冲区
     while (1)
     {
@@ -261,114 +272,207 @@ int main(void)
         float current_y_ma = BSP_CurrentSensor_GetCurrent(1);
         float current_z_ma = BSP_CurrentSensor_GetCurrent(2);
 
+        ang_x = AS5600_GetAngle(&enc_x); /* X轴角度 */
+        ang_y = AS5600_GetAngle(&enc_y); /* Y轴角度 */
+        ang_z = AS5600_GetAngle(&enc_z); /* Z轴行程 */
+
+        float X = -ang_x * 8.6f * PI / 180.0f;
+        float Y = ang_y * 7.9f * PI / 180.0f;
+        float Z = -ang_z;
+
+        float P = 24.6f - Z;
+        float sy = sinf(Y), cy = cosf(Y);
+        float sx = sinf(X), cx = cosf(X);
+
+        float a = (cy + sy) / 2.0f; // sin(45°+Y)/√2
+        float b = (cy - sy) / 2.0f; // cos(45°+Y)/√2
+
+        Position_X = P * (cy + sy) * sx / 1.414f;
+        Position_Y = -P * (a * cx - b);
+        Position_Z = 24.6f - P * (a * cx + b);
+
+        float dX, dY, dZ;
+        if (P > 0.001f)
+        {
+            dX = Position_X / P;
+            dY = Position_Y / P;
+            dZ = (Position_Z - 24.6f) / P;
+        }
+        else
+        {
+            dX = 0;
+            dY = 0;
+            dZ = -1;
+        }
+
+        // ===== 四元数：从 (0,0,-1) 旋转到 (dx,dy,dz) =====
+        float qw, qx, qy, qz;
+        float nrm = sqrtf(dX * dX + dY * dY + dZ * dZ);
+        if (nrm < 0.001f)
+        {
+            qw = 1;
+            qx = 0;
+            qy = 0;
+            qz = 0;
+        }
+        else
+        {
+            float nx = dX / nrm, ny = dY / nrm, nz = dZ / nrm;
+            float dot = -nz;
+            if (dot > 0.9999f)
+            {
+                qw = 1;
+                qx = 0;
+                qy = 0;
+                qz = 0;
+            }
+            else if (dot < -0.9999f)
+            {
+                qw = 0;
+                qx = 1;
+                qy = 0;
+                qz = 0;
+            }
+            else
+            {
+                float s = sqrtf((1 + dot) * 2);
+                qw = s / 2;
+                qx = -ny / s;
+                qy = nx / s;
+                qz = 0;
+            }
+        }
+
+        // ===== 四元数 → 欧拉角（ZYX 顺序） =====
+        roll = atan2f(2 * (qw * qx + qy * qz), 1 - 2 * (qx * qx + qy * qy));
+        pitch = asinf(2 * (qw * qy - qz * qx));
+        yaw = atan2f(2 * (qw * qz + qx * qy), 1 - 2 * (qy * qy + qz * qz));
         
-        /* ============ LCD显示：3路电流环数据 ============ */
-        /* ---- 电机X (索引0) ---- */
-        sprintf(buffer, "PWM_X:%.0f%%  ", PID_GetOutput(&current_loop[0].pid));
-        lcd_show_string(10, 10, 300, 12, 12, buffer, RED);
-        sprintf(buffer, "Tgt_X:%.0fmA  ", CurrentLoop_GetTarget(&current_loop[0]));
-        lcd_show_string(10, 25, 300, 12, 12, buffer, BLUE);
-        sprintf(buffer, "Cur_X:%.0fmA  ", current_x_ma);
-        lcd_show_string(10, 40, 300, 12, 12, buffer, BLUE);
+        roll *= -180.0f / PI;
+        pitch *= 180.0f / PI;
+        yaw *= -180.0f / PI;
 
-        sprintf(buffer, "ADC_X:%lu Off_X:%.0f",
-                (unsigned long)adc_injected_data[0],
-                BSP_CurrentSensor_GetOffsetById(0));
-        lcd_show_string(100, 55, 300, 12, 12, buffer, BLUE);
+        // /* ============ LCD显示：3路电流环数据 ============ */
+        // /* ---- 电机X (索引0) ---- */
+        // sprintf(buffer, "PWM_X:%.0f%%  ", PID_GetOutput(&current_loop[0].pid));
+        // lcd_show_string(10, 10, 300, 12, 12, buffer, RED);
+        // sprintf(buffer, "Tgt_X:%.0fmA  ", CurrentLoop_GetTarget(&current_loop[0]));
+        // lcd_show_string(10, 25, 300, 12, 12, buffer, BLUE);
+        // sprintf(buffer, "Cur_X:%.0fmA  ", current_x_ma);
+        // lcd_show_string(10, 40, 300, 12, 12, buffer, BLUE);
 
-        /* ---- 电机Y (索引1) ---- */
-        sprintf(buffer, "PWM_Y:%.0f%%  ", PID_GetOutput(&current_loop[1].pid));
-        lcd_show_string(10, 60, 300, 12, 12, buffer, RED);
-        sprintf(buffer, "Tgt_Y:%.0fmA  ", CurrentLoop_GetTarget(&current_loop[1]));
-        lcd_show_string(10, 75, 300, 12, 12, buffer, BLUE);
-        sprintf(buffer, "Cur_Y:%.0fmA  ", current_y_ma);
-        lcd_show_string(10, 90, 300, 12, 12, buffer, BLUE);
+        // sprintf(buffer, "ADC_X:%lu Off_X:%.0f",
+        //         (unsigned long)adc_injected_data[0],
+        //         BSP_CurrentSensor_GetOffsetById(0));
+        // lcd_show_string(10, 55, 300, 12, 12, buffer, BLUE);
 
-        sprintf(buffer, "ADC_Y:%lu Off_Y:%.0f",
-                (unsigned long)adc_injected_data[1],
-                BSP_CurrentSensor_GetOffsetById(1));
-        lcd_show_string(100, 105, 300, 12, 12, buffer, BLUE);
+        // /* ---- 电机Y (索引1) ---- */
+        // sprintf(buffer, "PWM_Y:%.0f%%  ", PID_GetOutput(&current_loop[1].pid));
+        // lcd_show_string(10, 80, 300, 12, 12, buffer, RED);
+        // sprintf(buffer, "Tgt_Y:%.0fmA  ", CurrentLoop_GetTarget(&current_loop[1]));
+        // lcd_show_string(10, 95, 300, 12, 12, buffer, BLUE);
+        // sprintf(buffer, "Cur_Y:%.0fmA  ", current_y_ma);
+        // lcd_show_string(10, 110, 300, 12, 12, buffer, BLUE);
 
-        /* ---- 电机Z (索引2) ---- */
-        sprintf(buffer, "PWM_Z:%.0f%%  ", PID_GetOutput(&current_loop[2].pid));
-        lcd_show_string(10, 110, 300, 12, 12, buffer, RED);
-        sprintf(buffer, "Tgt_Z:%.0fmA  ", CurrentLoop_GetTarget(&current_loop[2]));
-        lcd_show_string(10, 125, 300, 12, 12, buffer, BLUE);
-        sprintf(buffer, "Cur_Z:%.0fmA  ", current_z_ma);
-        lcd_show_string(10, 140, 300, 12, 12, buffer, BLUE);
+        // sprintf(buffer, "ADC_Y:%lu Off_Y:%.0f",
+        //         (unsigned long)adc_injected_data[1],
+        //         BSP_CurrentSensor_GetOffsetById(1));
+        // lcd_show_string(10, 125, 300, 12, 12, buffer, BLUE);
 
-        sprintf(buffer, "ADC_Z:%lu Off_Z:%.0f",
-                (unsigned long)adc_injected_data[2],
-                BSP_CurrentSensor_GetOffsetById(2));
-        lcd_show_string(100, 155, 300, 12, 12, buffer, BLUE);
+        // /* ---- 电机Z (索引2) ---- */
+        // sprintf(buffer, "PWM_Z:%.0f%%  ", PID_GetOutput(&current_loop[2].pid));
+        // lcd_show_string(10, 150, 300, 12, 12, buffer, RED);
+        // sprintf(buffer, "Tgt_Z:%.0fmA  ", CurrentLoop_GetTarget(&current_loop[2]));
+        // lcd_show_string(10, 165, 300, 12, 12, buffer, BLUE);
+        // sprintf(buffer, "Cur_Z:%.0fmA  ", current_z_ma);
+        // lcd_show_string(10, 180, 300, 12, 12, buffer, BLUE);
 
-        //        /* ---- 电压 ---- */
-        //        sprintf(buffer, "V:%.1fV   ",
-        //                BSP_VoltageSensor_GetPowerVoltage());
-        //        lcd_show_string(10, 165, 300, 12, 12, buffer, BLUE);
+        // sprintf(buffer, "ADC_Z:%lu Off_Z:%.0f",
+        //         (unsigned long)adc_injected_data[2],
+        //         BSP_CurrentSensor_GetOffsetById(2));
+        // lcd_show_string(10, 195, 300, 12, 12, buffer, BLUE);
 
-        /* ---- 三路PID参数 ---- */
-        sprintf(buffer, "X:Kp%.3f Ki%.3f Kd%.3f",
-                current_loop[0].pid.Kp, current_loop[0].pid.Ki, current_loop[0].pid.Kd);
-        lcd_show_string(10, 185, 400, 12, 12, buffer, BLUE);
+        // //        /* ---- 电压 ---- */
+        // //        sprintf(buffer, "V:%.1fV   ",
+        // //                BSP_VoltageSensor_GetPowerVoltage());
+        // //        lcd_show_string(10, 165, 300, 12, 12, buffer, BLUE);
 
-        sprintf(buffer, "Y:Kp%.3f Ki%.3f Kd%.3f",
-                current_loop[1].pid.Kp, current_loop[1].pid.Ki, current_loop[1].pid.Kd);
-        lcd_show_string(10, 200, 400, 12, 12, buffer, BLUE);
+        // /* ---- 三路PID参数 ---- */
+        // sprintf(buffer, "X:Kp%.3f Ki%.3f Kd%.3f",
+        //         current_loop[0].pid.Kp, current_loop[0].pid.Ki, current_loop[0].pid.Kd);
+        // lcd_show_string(10, 220, 400, 12, 12, buffer, BLUE);
 
-        sprintf(buffer, "Z:Kp%.3f Ki%.3f Kd%.3f",
-                current_loop[2].pid.Kp, current_loop[2].pid.Ki, current_loop[2].pid.Kd);
-        lcd_show_string(10, 215, 400, 12, 12, buffer, BLUE);
+        // sprintf(buffer, "Y:Kp%.3f Ki%.3f Kd%.3f",
+        //         current_loop[1].pid.Kp, current_loop[1].pid.Ki, current_loop[1].pid.Kd);
+        // lcd_show_string(10, 235, 400, 12, 12, buffer, BLUE);
 
-        /* USER CODE END WHILE */
+        // sprintf(buffer, "Z:Kp%.3f Ki%.3f Kd%.3f",
+        //         current_loop[2].pid.Kp, current_loop[2].pid.Ki, current_loop[2].pid.Kd);
+        // lcd_show_string(10, 250, 400, 12, 12, buffer, BLUE);
 
-        /* USER CODE BEGIN 3 */
+        // /* ---- 三路编码器参数 ---- */
+        // sprintf(buffer, "X:%5.1f Y:%5.1f Z:%5.1f",
+        //         ang_x, ang_y, ang_z);
+        // lcd_show_string(10, 10, 400, 12, 12, buffer, BLUE);
+
+        // sprintf(buffer, "PX:%5.1f PY:%5.1f PZ:%5.1f",
+        //         Position_X, Position_Y, Position_Z);
+        // lcd_show_string(10, 25, 400, 12, 12, buffer, BLUE);
+
+        // sprintf(buffer, "Roll:%5.1f Pitch:%5.1f Yaw:%5.1f",
+        //         roll, pitch, yaw);
+        // lcd_show_string(10, 40, 400, 12, 12, buffer, BLUE);
+
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
     }
-    /* USER CODE END 3 */
+  /* USER CODE END 3 */
 }
 
 /**
- * @brief System Clock Configuration
- * @retval None
- */
+  * @brief System Clock Configuration
+  * @retval None
+  */
 void SystemClock_Config(void)
 {
-    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-    /** Configure the main internal regulator output voltage
-     */
-    __HAL_RCC_PWR_CLK_ENABLE();
-    __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+  /** Configure the main internal regulator output voltage
+  */
+  __HAL_RCC_PWR_CLK_ENABLE();
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
-    /** Initializes the RCC Oscillators according to the specified parameters
-     * in the RCC_OscInitTypeDef structure.
-     */
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-    RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-    RCC_OscInitStruct.PLL.PLLM = 8;
-    RCC_OscInitStruct.PLL.PLLN = 336;
-    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-    RCC_OscInitStruct.PLL.PLLQ = 7;
-    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-    {
-        Error_Handler();
-    }
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 336;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  RCC_OscInitStruct.PLL.PLLQ = 7;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
 
-    /** Initializes the CPU, AHB and APB buses clocks
-     */
-    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
-    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
-    {
-        Error_Handler();
-    }
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
+  {
+    Error_Handler();
+  }
 }
 
 /* USER CODE BEGIN 4 */
@@ -377,45 +481,44 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == TIM6)
     {
-        BSP_VoltageSensor_Update(); // 更新电压检测结果
-        vofa_send_cnt++;
-        if (vofa_send_cnt >= 5)
-        {
-            vofa_send_cnt = 0;
+        // vofa_send_cnt++;
+        // if (vofa_send_cnt >= 5)
+        // {
+        //     vofa_send_cnt = 0;
             VOFA_Plus_SendCurrentLoopData();
-        }
+        // }
     }
 }
 /* USER CODE END 4 */
 
 /**
- * @brief  This function is executed in case of error occurrence.
- * @retval None
- */
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
 void Error_Handler(void)
 {
-    /* USER CODE BEGIN Error_Handler_Debug */
+  /* USER CODE BEGIN Error_Handler_Debug */
     /* User can add his own implementation to report the HAL error return state */
     __disable_irq();
     while (1)
     {
     }
-    /* USER CODE END Error_Handler_Debug */
+  /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef USE_FULL_ASSERT
+#ifdef  USE_FULL_ASSERT
 /**
- * @brief  Reports the name of the source file and the source line number
- *         where the assert_param error has occurred.
- * @param  file: pointer to the source file name
- * @param  line: assert_param error line source number
- * @retval None
- */
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-    /* USER CODE BEGIN 6 */
+  /* USER CODE BEGIN 6 */
     /* User can add his own implementation to report the file name and line number,
        ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-    /* USER CODE END 6 */
+  /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
