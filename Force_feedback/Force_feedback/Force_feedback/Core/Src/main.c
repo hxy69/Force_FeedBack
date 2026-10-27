@@ -92,6 +92,11 @@ uint8_t closed_loop_active[3] = {0};  /* 闭环演示是否激活（KEY0控制�
 extern uint32_t adc_injected_data[3]; /* adc.c 定义的注入通道转换结果              */
 
 uint16_t vofa_send_cnt = 0; // VOFA+发送频率计数器，配合定时器中断实现定期发送调试数据到VOFA+
+
+/* USB通信 */
+unsigned char USB_Recive_Buffer[64]; // USB接收缓存
+unsigned char USB_Received_Count = 64;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -105,6 +110,7 @@ void SystemClock_Config(void);
 float ang_x = 0, ang_y = 0, ang_z = 0;
 float Position_X = 0, Position_Y = 0, Position_Z = 0;
 float roll = 0, pitch = 0, yaw = 0;
+
 /* USER CODE END 0 */
 
 /**
@@ -268,6 +274,7 @@ int main(void)
             PID_ParamParser_Reset(&current_pid_parse);
         }
 
+
         float current_x_ma = BSP_CurrentSensor_GetCurrent(0);
         float current_y_ma = BSP_CurrentSensor_GetCurrent(1);
         float current_z_ma = BSP_CurrentSensor_GetCurrent(2);
@@ -347,7 +354,7 @@ int main(void)
         roll = atan2f(2 * (qw * qx + qy * qz), 1 - 2 * (qx * qx + qy * qy));
         pitch = asinf(2 * (qw * qy - qz * qx));
         yaw = atan2f(2 * (qw * qz + qx * qy), 1 - 2 * (qy * qy + qz * qz));
-        
+
         roll *= -180.0f / PI;
         pitch *= 180.0f / PI;
         yaw *= -180.0f / PI;
@@ -481,12 +488,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == TIM6)
     {
-        // vofa_send_cnt++;
-        // if (vofa_send_cnt >= 5)
-        // {
-        //     vofa_send_cnt = 0;
-            VOFA_Plus_SendCurrentLoopData();
-        // }
+        VOFA_Plus_SendCurrentLoopData();
     }
 }
 /* USER CODE END 4 */

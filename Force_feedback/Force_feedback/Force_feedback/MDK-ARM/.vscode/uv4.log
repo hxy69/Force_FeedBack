@@ -1,3 +1,4 @@
 Load "Force_feedback\\Force_feedback.axf" 
-Erase Done.Programming Done.Verify OK.Application running ...
-Flash Load finished at 18:16:30
+No ST-LINK detected
+Error: Flash Download failed  -  Target DLL has been cancelled
+Flash Load finished at 13:27:16

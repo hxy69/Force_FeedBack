@@ -61,6 +61,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->Force_X->setAlignment(Qt::AlignCenter);
     ui->Force_Y->setAlignment(Qt::AlignCenter);
     ui->Force_Z->setAlignment(Qt::AlignCenter);
+    ui->Force_X_2->setAlignment(Qt::AlignCenter);
+    ui->Force_Y_2->setAlignment(Qt::AlignCenter);
+    ui->Force_Z_2->setAlignment(Qt::AlignCenter);
 
     QIntValidator *forceValidator = new QIntValidator(-300, 300, this);
     ui->Force_X->setValidator(forceValidator);
@@ -230,6 +233,11 @@ void MainWindow::handleCommand(const QString &line)
     }
 
     // 标签前的纯数字是电流 6 值（本版本不显示，跳过）
+    if (tokens.size() >= 6 && !tokens.at(0).startsWith("Encoder", Qt::CaseInsensitive)) {
+        ui->Force_X_2->setText(tokens.at(1).trimmed());  // cur_x
+        ui->Force_Y_2->setText(tokens.at(3).trimmed());  // cur_y
+        ui->Force_Z_2->setText(tokens.at(5).trimmed());  // cur_z
+    }
 
     // Encoder 编码器角度 -> lineEdit_1/2/3
     if (encIdx >= 0 && encIdx + 2 < tokens.size()) {

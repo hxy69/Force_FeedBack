@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2026-07-21 15:38:03
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2026-10-23 17:35:10
+ * @LastEditTime: 2026-10-27 10:24:10
  * @FilePath: \MDK-ARMd:\genbotter_motor_tutorial-master\genbotter_motor_tutorial-master\3.案例代码\chap10_brush_motor_8\Drivers\Control\Src\vofa_plus.c
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -131,4 +131,5 @@ void VOFA_Plus_SendCurrentLoopData(void)
     vofa_data.roll = roll; vofa_data.pitch = pitch; vofa_data.yaw = yaw;
     VOFA_Plus_SendData(&vofa_data);
 }
+
 #endif

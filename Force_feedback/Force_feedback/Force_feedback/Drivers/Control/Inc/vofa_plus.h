@@ -78,6 +78,7 @@ void VOFA_Plus_SendData(VOFA_Data_t *data);
  */
 void VOFA_Plus_SendCurrentLoopData(void);
 
+
 #else
 /* ==================== 空实现（当VOFA+功能关闭时，避免编译错误） ==================== */
 #define VOFA_Plus_Init() ((void)0)

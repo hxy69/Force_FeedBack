@@ -1,7 +1,7 @@
 Dependencies for Project 'Force_feedback', Target 'Force_feedback': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::ARMCC
-F (startup_stm32f407xx.s)(0x6ADB28F0)(--cpu Cortex-M4.fp.sp -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_Force_feedback-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include--pd "__UVISION_VERSION SETA 534" --pd "_RTE_ SETA 1" --pd "STM32F407xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f407xx.lst --xref -o force_feedback\startup_stm32f407xx.o --depend force_feedback\startup_stm32f407xx.d)
-F (../Core/Src/main.c)(0x6ADB33F1)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/BSP/Inc -I ../Drivers/Control/Inc-I.\RTE\_Force_feedback-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o force_feedback\main.o --omf_browse force_feedback\main.crf --depend force_feedback\main.d)
+F (startup_stm32f407xx.s)(0x6AE0358A)(--cpu Cortex-M4.fp.sp -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_Force_feedback-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include--pd "__UVISION_VERSION SETA 534" --pd "_RTE_ SETA 1" --pd "STM32F407xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f407xx.lst --xref -o force_feedback\startup_stm32f407xx.o --depend force_feedback\startup_stm32f407xx.d)
+F (../Core/Src/main.c)(0x6AE035B7)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/BSP/Inc -I ../Drivers/Control/Inc-I.\RTE\_Force_feedback-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o force_feedback\main.o --omf_browse force_feedback\main.crf --depend force_feedback\main.d)
 I (../Core/Inc/main.h)(0x6ADADAB3)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6A69696C)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6AD9A81D)
@@ -45,7 +45,7 @@ I (../Core/Inc/adc.h)(0x6AB3866F)
 I (../Core/Inc/dma.h)(0x6A6AC89E)
 I (../Core/Inc/tim.h)(0x6A6AFB62)
 I (../Core/Inc/usart.h)(0x6A714C56)
-I (../Core/Inc/usb_otg.h)(0x6AD9A81D)
+I (../Core/Inc/usb_otg.h)(0x6AE02164)
 I (../Core/Inc/gpio.h)(0x6A696972)
 I (../Core/Inc/fsmc.h)(0x6A696973)
 I (D:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5E8E3CC2)
@@ -60,7 +60,7 @@ I (../Drivers/BSP/Inc/temper_sensor.h)(0x6A706E7D)
 I (../Drivers/Control/Inc/current_loop.h)(0x6AD9E5B9)
 I (../Drivers/Control/Inc/pid.h)(0x6A718CDE)
 I (../Drivers/Control/Inc/user_config.h)(0x6AB3AABD)
-I (../Drivers/Control/Inc/vofa_plus.h)(0x6ADB2552)
+I (../Drivers/Control/Inc/vofa_plus.h)(0x6AE01433)
 I (D:\Keil_v5\ARM\ARMCC\include\string.h)(0x5E8E3CC2)
 I (../Drivers/Control/Inc/pid_param_parse.h)(0x6A8FAAF5)
 I (../Core/Inc/as5600.h)(0x6ADAF42D)
@@ -316,8 +316,8 @@ I (../Drivers/Control/Inc/current_loop.h)(0x6AD9E5B9)
 I (../Drivers/Control/Inc/pid.h)(0x6A718CDE)
 I (../Drivers/BSP/Inc/brush_motor.h)(0x6A8EA967)
 I (../Drivers/Control/Inc/pid_param_parse.h)(0x6A8FAAF5)
-F (../Core/Src/usb_otg.c)(0x6AD9A81D)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/BSP/Inc -I ../Drivers/Control/Inc-I.\RTE\_Force_feedback-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o force_feedback\usb_otg.o --omf_browse force_feedback\usb_otg.crf --depend force_feedback\usb_otg.d)
-I (../Core/Inc/usb_otg.h)(0x6AD9A81D)
+F (../Core/Src/usb_otg.c)(0x6AE02164)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/BSP/Inc -I ../Drivers/Control/Inc-I.\RTE\_Force_feedback-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o force_feedback\usb_otg.o --omf_browse force_feedback\usb_otg.crf --depend force_feedback\usb_otg.d)
+I (../Core/Inc/usb_otg.h)(0x6AE02164)
 I (../Core/Inc/main.h)(0x6ADADAB3)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6A69696C)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6AD9A81D)
@@ -357,7 +357,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6A69696C)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h)(0x6A69696C)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x6A69696C)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h)(0x6A69696C)
-F (../Core/Src/stm32f4xx_it.c)(0x6ADB28EC)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/BSP/Inc -I ../Drivers/Control/Inc-I.\RTE\_Force_feedback-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o force_feedback\stm32f4xx_it.o --omf_browse force_feedback\stm32f4xx_it.crf --depend force_feedback\stm32f4xx_it.d)
+F (../Core/Src/stm32f4xx_it.c)(0x6AE02164)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/BSP/Inc -I ../Drivers/Control/Inc-I.\RTE\_Force_feedback-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o force_feedback\stm32f4xx_it.o --omf_browse force_feedback\stm32f4xx_it.crf --depend force_feedback\stm32f4xx_it.d)
 I (../Core/Inc/main.h)(0x6ADADAB3)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6A69696C)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6AD9A81D)
@@ -397,7 +397,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6A69696C)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h)(0x6A69696C)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x6A69696C)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h)(0x6A69696C)
-I (../Core/Inc/stm32f4xx_it.h)(0x6ADB28EC)
+I (../Core/Inc/stm32f4xx_it.h)(0x6AE02164)
 F (../Core/Src/stm32f4xx_hal_msp.c)(0x6A696973)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/BSP/Inc -I ../Drivers/Control/Inc-I.\RTE\_Force_feedback-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o force_feedback\stm32f4xx_hal_msp.o --omf_browse force_feedback\stm32f4xx_hal_msp.crf --depend force_feedback\stm32f4xx_hal_msp.d)
 I (../Core/Inc/main.h)(0x6ADADAB3)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6A69696C)
@@ -1890,7 +1890,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x6A69696C)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h)(0x6A69696C)
 I (../Drivers/BSP/Inc/current_sensor.h)(0x6AD9C509)
 I (../Drivers/Control/Inc/user_config.h)(0x6AB3AABD)
-I (../Drivers/Control/Inc/vofa_plus.h)(0x6ADB2552)
+I (../Drivers/Control/Inc/vofa_plus.h)(0x6AE01433)
 I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5E8E3CC2)
 I (D:\Keil_v5\ARM\ARMCC\include\string.h)(0x5E8E3CC2)
 F (..\Drivers\Control\Inc\pid.h)(0x6A718CDE)()
@@ -1898,8 +1898,8 @@ F (..\Drivers\Control\Src\pid.c)(0x6A6C4BB5)(--c99 -c --cpu Cortex-M4.fp.sp -D__
 I (../Drivers/Control/Inc/pid.h)(0x6A718CDE)
 I (D:\Keil_v5\ARM\ARMCC\include\string.h)(0x5E8E3CC2)
 F (..\Drivers\Control\Inc\user_config.h)(0x6AB3AABD)()
-F (..\Drivers\Control\Src\vofa_plus.c)(0x6ADB2A4F)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/BSP/Inc -I ../Drivers/Control/Inc-I.\RTE\_Force_feedback-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o force_feedback\vofa_plus.o --omf_browse force_feedback\vofa_plus.crf --depend force_feedback\vofa_plus.d)
-I (../Drivers/Control/Inc/vofa_plus.h)(0x6ADB2552)
+F (..\Drivers\Control\Src\vofa_plus.c)(0x6AE01433)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/BSP/Inc -I ../Drivers/Control/Inc-I.\RTE\_Force_feedback-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o force_feedback\vofa_plus.o --omf_browse force_feedback\vofa_plus.crf --depend force_feedback\vofa_plus.d)
+I (../Drivers/Control/Inc/vofa_plus.h)(0x6AE01433)
 I (../Core/Inc/main.h)(0x6ADADAB3)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6A69696C)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6AD9A81D)
@@ -1946,7 +1946,7 @@ I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5E8E3CC2)
 I (D:\Keil_v5\ARM\ARMCC\include\string.h)(0x5E8E3CC2)
 I (../Core/Inc/usart.h)(0x6A714C56)
 I (../Drivers/BSP/Inc/current_sensor.h)(0x6AD9C509)
-F (..\Drivers\Control\Inc\vofa_plus.h)(0x6ADB2552)()
+F (..\Drivers\Control\Inc\vofa_plus.h)(0x6AE01433)()
 F (..\Drivers\Control\Src\pid_param_parse.c)(0x6A8FAF9F)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/BSP/Inc -I ../Drivers/Control/Inc-I.\RTE\_Force_feedback-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o force_feedback\pid_param_parse.o --omf_browse force_feedback\pid_param_parse.crf --depend force_feedback\pid_param_parse.d)
 I (../Drivers/Control/Inc/pid_param_parse.h)(0x6A8FAAF5)
 I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5E8E3CC2)
